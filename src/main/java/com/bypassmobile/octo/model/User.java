@@ -11,9 +11,12 @@ public class User {
     @SerializedName("avatar_url")
     private final String profileURL;
 
-    public User(String name, String profileURL) {
+    private final int followersCount;
+
+    public User(String name, String profileURL, int followersCount) {
         this.name = name;
         this.profileURL = profileURL;
+        this.followersCount = followersCount;
     }
 
     public String getName() {
@@ -22,5 +25,9 @@ public class User {
 
     public String getProfileURL() {
         return profileURL;
+    }
+
+    public int getFollowersCount() {
+        return followersCount;
     }
 }

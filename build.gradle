@@ -15,11 +15,11 @@ dependencies {
         mavenCentral()
     }
 
-
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.squareup.retrofit:retrofit:1.2.2'
     compile 'com.squareup.picasso:picasso:2.1.1'
     compile 'com.android.support:support-v4:18.0.0'
+    compile 'com.makeramen:roundedimageview:2.2.1'
 }
 
 android {

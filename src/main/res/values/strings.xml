@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Octo-Stalker</string>
+    <string name="app_name">Repo Stalker</string>
     <string name="action_settings">Settings</string>
+    <string name="organization_name">bypasslane</string>
+    <string name="error_could_not_load_orginization_members">Error: Could not load orginization members</string>
+    <string name="error_could_not_load_followers_of_user">Error: Could not load followers of user</string>
 </resources>
