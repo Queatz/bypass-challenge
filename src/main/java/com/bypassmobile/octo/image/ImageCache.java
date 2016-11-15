@@ -8,7 +8,7 @@ import com.squareup.picasso.Cache;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ImageCache implements Cache{
+public class ImageCache implements Cache {
 
     private Map<String,Bitmap> cacheMap = new LinkedHashMap<String,Bitmap>();
 
@@ -19,7 +19,7 @@ public class ImageCache implements Cache{
 
     @Override
     public void set(String stringResource, Bitmap bitmap) {
-        cacheMap.put(stringResource,bitmap);
+        cacheMap.put(stringResource, bitmap);
     }
 
     @Override
