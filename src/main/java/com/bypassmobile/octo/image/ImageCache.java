@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 
 import com.squareup.picasso.Cache;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -17,7 +18,19 @@ import static android.content.Context.ACTIVITY_SERVICE;
  */
 public class ImageCache implements Cache {
 
-    private Map<String,Bitmap> cacheMap = new LinkedHashMap<String, Bitmap>();
+    private final int CACHE_EXPIRATION_TIME_MS = 60 * 60 * 1000; // 1 hour
+
+    private class CacheEntry {
+        Bitmap bitmap;
+        Date expiration;
+
+        public CacheEntry(Bitmap bitmap) {
+            this.bitmap = bitmap;
+            this.expiration = new Date(new Date().getTime() + CACHE_EXPIRATION_TIME_MS);
+        }
+    }
+
+    private Map<String, CacheEntry> cacheMap = new LinkedHashMap<String, CacheEntry>();
     private int maxCacheSize;
 
     public ImageCache(Context context) {
@@ -31,12 +44,23 @@ public class ImageCache implements Cache {
 
     @Override
     public Bitmap get(String stringResource) {
-        return cacheMap.get(stringResource);
+        CacheEntry cacheEntry = cacheMap.get(stringResource);
+
+        if (new Date().after(cacheEntry.expiration)) {
+            invalidate(stringResource);
+            return null;
+        }
+
+        return cacheEntry.bitmap;
+    }
+
+    private void invalidate(String stringResource) {
+        cacheMap.remove(stringResource);
     }
 
     @Override
     public void set(String stringResource, Bitmap bitmap) {
-        cacheMap.put(stringResource, bitmap);
+        cacheMap.put(stringResource, new CacheEntry(bitmap));
     }
 
     @Override

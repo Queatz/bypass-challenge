@@ -1,6 +1,7 @@
 package com.bypassmobile.octo;
 
 import android.app.ActionBar;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bypassmobile.octo.adapters.MemberAdapter;
@@ -32,17 +34,42 @@ public class MembersListActivity extends BaseActivity {
         setContentView(R.layout.orginization_members);
 
         membersListView = (ListView) findViewById(R.id.membersListView);
+        TextView currentMember = (TextView) findViewById(R.id.currentMember);
+
+        ActionBar actionBar = getActionBar();
 
         if (getIntent() != null && getIntent().hasExtra(PARAMETER_MEMBER)) {
-            loadMember(getIntent().getStringExtra(PARAMETER_MEMBER));
+            String memberName = getIntent().getStringExtra(PARAMETER_MEMBER);
 
-            ActionBar actionBar = getActionBar();
+            currentMember.setVisibility(View.VISIBLE);
+            currentMember.setText(getString(R.string.member_follows, memberName));
+
+            loadMember(memberName);
 
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
             }
         } else {
+            currentMember.setVisibility(View.GONE);
             loadOrganization(getString(R.string.organization_name));
+        }
+
+        if (actionBar != null) {
+            actionBar.setDisplayShowHomeEnabled(false);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            searchMembers(query);
+        }
+    }
+
+    private void searchMembers(String query) {
+        if (membersAdapter != null) {
+            membersAdapter.setSearchQuery(query);
         }
     }
 
@@ -111,13 +138,14 @@ public class MembersListActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
         }
+
         return super.onOptionsItemSelected(item);
     }
 }

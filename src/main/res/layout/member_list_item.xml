@@ -13,7 +13,7 @@
 
     <TextView
         android:id="@+id/memberName"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_marginRight="@dimen/bsu"
@@ -21,8 +21,10 @@
 
     <TextView
         android:id="@+id/followerCount"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:textSize="10sp"
+        android:gravity="center"
         android:textColor="@color/white"
         android:background="@drawable/grey_circle" />
 

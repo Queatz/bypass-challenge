@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.bypassmobile.octo.R;
 import com.bypassmobile.octo.image.ImageLoader;
 import com.bypassmobile.octo.model.User;
-import com.makeramen.roundedimageview.RoundedImageView;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Transformation;
 
@@ -25,18 +24,45 @@ public class MemberAdapter extends BaseAdapter {
 
     private Context context;
     private List<User> membersList = new ArrayList<User>();
+    private List<User> rawMembersList;
 
     public MemberAdapter(Context context) {
         this.context = context;
     }
 
     /**
-     * Set the list of members.  Invalidates the adapter.
+     * Set the list of members.  Invalidates the adapter and search string.
      * @param members The new set of memebers
      */
     public void setMembersList(List<User> members) {
-        this.membersList = members;
+        rawMembersList = membersList = members;
         notifyDataSetInvalidated();
+    }
+
+    /**
+     * Filter the members list via a string.  Requires members list to be loaded.
+     * @param searchQuery The search string
+     */
+    public void setSearchQuery(String searchQuery) {
+        if (rawMembersList == null) {
+            return;
+        }
+
+        if (searchQuery == null || searchQuery.isEmpty()) {
+            membersList = rawMembersList;
+            return;
+        }
+
+        membersList = new ArrayList<User>();
+
+        // Basic filtering
+        for (User user : rawMembersList) {
+            if (user.getName().matches(searchQuery.trim())) {
+                membersList.add(user);
+            }
+        }
+
+        notifyDataSetChanged();
     }
 
     @Override
@@ -87,9 +113,9 @@ public class MemberAdapter extends BaseAdapter {
 
         memberName.setText(member.getName());
 
-        if (member.getFollowersCount() > 0) {
+        if (member.getFollowing() > 0) {
             followerCount.setVisibility(View.VISIBLE);
-            followerCount.setText(Integer.toString(member.getFollowersCount()));
+            followerCount.setText(Integer.toString(member.getFollowing()));
         } else {
             followerCount.setVisibility(View.INVISIBLE);
         }

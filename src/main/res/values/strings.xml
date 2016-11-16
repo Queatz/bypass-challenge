@@ -6,4 +6,6 @@
     <string name="organization_name">bypasslane</string>
     <string name="error_could_not_load_orginization_members">Error: Could not load orginization members</string>
     <string name="error_could_not_load_followers_of_user">Error: Could not load followers of user</string>
+    <string name="member_follows">%1$s follows</string>
+    <string name="search">Search</string>
 </resources>
