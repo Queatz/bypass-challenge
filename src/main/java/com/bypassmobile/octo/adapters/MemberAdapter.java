@@ -7,6 +7,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bypassmobile.octo.BaseActivity;
 import com.bypassmobile.octo.R;
 import com.bypassmobile.octo.image.ImageLoader;
 import com.bypassmobile.octo.model.User;
@@ -17,6 +18,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by jacob on 11/14/16.
@@ -69,7 +74,7 @@ public class MemberAdapter extends BaseAdapter {
 
         // Basic filtering
         for (User user : rawMembersList) {
-            if (user.getName().matches(searchQuery)) {
+            if (user.getName().toLowerCase().matches(searchQuery)) {
                 membersList.add(user);
             }
         }
@@ -110,7 +115,6 @@ public class MemberAdapter extends BaseAdapter {
 
         ImageView memberAvatar = (ImageView) view.findViewById(R.id.memberAvatar);
         TextView memberName = (TextView) view.findViewById(R.id.memberName);
-        TextView followerCount = (TextView) view.findViewById(R.id.followerCount);
 
         User member = membersList.get(position);
 
@@ -125,13 +129,41 @@ public class MemberAdapter extends BaseAdapter {
 
         memberName.setText(member.getName());
 
-        if (member.getFollowing() > 0) {
-            followerCount.setVisibility(View.VISIBLE);
+        refreshFollowing(member, view);
+
+        return view;
+    }
+
+    private void refreshFollowing(User member, View view) {
+        TextView followerCount = (TextView) view.findViewById(R.id.followerCount);
+
+        if (member.getFollowing() == null) {
+            loadFollowing(member, view);
+            followerCount.setVisibility(View.INVISIBLE);
+        } else if (member.getFollowing() > 0) {
             followerCount.setText(Integer.toString(member.getFollowing()));
+            followerCount.setVisibility(View.VISIBLE);
         } else {
             followerCount.setVisibility(View.INVISIBLE);
         }
+    }
 
-        return view;
+    /**
+     * Loads the following count of a member.  Move into a more centralized location as project grows.
+     * @param member The member to load
+     */
+    private void loadFollowing(final User member, final View view) {
+        ((BaseActivity) context).getEndpoint().getUser(member.getName(), new Callback<User>() {
+            @Override
+            public void success(User user, Response response) {
+                member.setFollowing(user.getFollowing());
+                refreshFollowing(member, view);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
     }
 }

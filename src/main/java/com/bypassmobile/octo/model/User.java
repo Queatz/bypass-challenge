@@ -12,7 +12,7 @@ public class User {
     private final String profileURL;
 
     @SerializedName("following")
-    private final Integer following;
+    private Integer following;
 
     public User(String name, String profileURL, Integer following) {
         this.name = name;
@@ -29,6 +29,10 @@ public class User {
     }
 
     public Integer getFollowing() {
-        return following == null ? 0 : following;
+        return following;
+    }
+
+    public void setFollowing(Integer following) {
+        this.following = following;
     }
 }
