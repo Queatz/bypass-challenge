@@ -14,6 +14,8 @@ import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -32,9 +34,16 @@ public class MemberAdapter extends BaseAdapter {
 
     /**
      * Set the list of members.  Invalidates the adapter and search string.
-     * @param members The new set of memebers
+     * @param members The new set of members
      */
     public void setMembersList(List<User> members) {
+        Collections.sort(members, new Comparator<User>() {
+            @Override
+            public int compare(User a, User b) {
+                return a.getName().compareToIgnoreCase(b.getName());
+            }
+        });
+
         rawMembersList = membersList = members;
         notifyDataSetInvalidated();
     }
@@ -50,14 +59,17 @@ public class MemberAdapter extends BaseAdapter {
 
         if (searchQuery == null || searchQuery.isEmpty()) {
             membersList = rawMembersList;
+            notifyDataSetChanged();
             return;
         }
 
         membersList = new ArrayList<User>();
 
+        searchQuery = ".*" + searchQuery.trim() + ".*";
+
         // Basic filtering
         for (User user : rawMembersList) {
-            if (user.getName().matches(searchQuery.trim())) {
+            if (user.getName().matches(searchQuery)) {
                 membersList.add(user);
             }
         }

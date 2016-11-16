@@ -17,10 +17,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name="com.bypassmobile.octo.MemberFollowersActivity"
-            android:label="@string/app_name" >
-        </activity>
     </application>
 
 </manifest>

@@ -46,6 +46,10 @@ public class ImageCache implements Cache {
     public Bitmap get(String stringResource) {
         CacheEntry cacheEntry = cacheMap.get(stringResource);
 
+        if (cacheEntry == null) {
+            return null;
+        }
+
         if (new Date().after(cacheEntry.expiration)) {
             invalidate(stringResource);
             return null;
